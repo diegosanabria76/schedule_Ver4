@@ -1,0 +1,21 @@
+class TimeSlot:
+    def __init__(self, start, end):
+        self.start = self.time_to_minutes(start)
+        self.end = self.time_to_minutes(end)
+
+    @staticmethod
+    def time_to_minutes(time_str):
+        hours, minutes = map(int, time_str.split(":"))
+        return hours * 60 + minutes
+
+    def duration(self):
+        return (self.end - self.start) / 60.0
+
+
+
+    def to_string(self):
+        return f"{self.start} - {self.end}"
+
+    def __str__(self):
+        return f"{self.start} - {self.end}"
+
