@@ -1,0 +1,50 @@
+import tkinter as tk
+from tkinter import ttk
+
+
+def minutes_to_time_format(time_range_str):
+    start, end = time_range_str.split(" - ")
+    start_hour, start_minute = divmod(int(start), 60)
+    end_hour, end_minute = divmod(int(end), 60)
+
+    return f"{start_hour:02d}:{start_minute:02d} - {end_hour:02d}:{end_minute:02d}"
+def create_timetable(root, all_allocations=None):
+    timeSlots = ["480 - 525", "570 - 615", "645 - 690", "690 - 750", "810 - 855", "855 - 915"]
+    days = ["dia_uno", "dia_dos", "dia_tres", "dia_cuatro", "dia_cinco", "dia_seis"]  # rest of the days
+
+
+    for row, slot in enumerate(timeSlots, start=1):
+        readable_time = minutes_to_time_format(slot)
+        ttk.Label(root, text=readable_time).grid(row=row, column=0, sticky='w', padx=10, pady=5)
+
+    for col, day in enumerate(days, start=1):
+        ttk.Label(root, text=day).grid(row=0, column=col, sticky='n', padx=10, pady=5)
+
+        for row, slot in enumerate(timeSlots, start=1):
+            professor_name = all_allocations.get(day, {}).get(slot, "")
+            ttk.Label(root, text=professor_name, relief='solid').grid(row=row, column=col, padx=2, pady=2, ipadx=10, ipady=10)
+
+'''  
+def create_timetable(root, all_allocations=None):
+    timeSlots = ["480 - 525", "570 - 615", "645 - 690", "690 - 750", "810 - 855", "855 - 915"]
+
+    #timeSlots = ["7:30 - 8:00", "8:00 - 8:45","8:45 - 9:30", "9:30 - 10:15","10:45 -11:30", "11:30 - 12:30","13:30 - 14:15", "14:15 - 15:15"]  # rest of the time slots
+    days = ["dia_uno", "dia_dos", "dia_tres", "dia_cuatro","dia_cinco", "dia_seis"]  # rest of the days
+
+
+
+    for row, slot in enumerate(timeSlots, start=1):
+        ttk.Label(root, text=slot).grid(row=row, column=0, sticky='w', padx=10, pady=5)
+
+
+    for col, day in enumerate(days, start=1):
+        ttk.Label(root, text=day).grid(row=0, column=col, sticky='n', padx=10, pady=5)
+
+        for row, slot in enumerate(timeSlots, start=1):
+            professor_name = all_allocations.get(day, {}).get(slot, "")
+            ttk.Label(root, text=professor_name, relief='solid').grid(row=row, column=col, padx=2, pady=2, ipadx=10, ipady=10)
+
+
+
+'''
+
