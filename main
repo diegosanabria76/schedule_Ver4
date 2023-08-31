@@ -1,0 +1,87 @@
+from TimeSlot import  *
+import tkinter as tk
+from gui import create_timetable
+from professor import Professor
+
+
+grades = ["6to","7mo","8vo","9no","10mo","11ce"]
+
+def get_all_allocations(professors, timeSlots, days):
+    all_allocations = {}
+    for professor in professors:
+        # Reset timeSlots and allocated hours for each professor
+        slots_copy = timeSlots.copy()
+        allocations = distribute_hours(professor, slots_copy, days)
+        for day, slots in allocations.items():
+            for slot in slots:
+                all_allocations.setdefault(day, {})[str(slot)] = professor.name
+
+    return all_allocations
+
+def distribute_hours(professor, timeSlots, days):
+    total_hours = professor.loadtime
+    daily_limit = 5
+    allocated_hours = {day: 0 for day in days}
+    allocations = {day: [] for day in days}
+
+    for slot in timeSlots[:]:  # Using slicing to ensure we iterate over a copy
+        if total_hours <= 0:
+            break
+        current_slot = slot
+
+        for day in days:
+            if allocated_hours[day] + current_slot.duration() <= daily_limit:
+                if total_hours - current_slot.duration() >= 0:
+                    allocations[day].append(slot)
+                    allocated_hours[day] += current_slot.duration()
+                    total_hours -= current_slot.duration()
+                    timeSlots.remove(slot)  # Remove the allocated slot
+                    break
+                else:
+                    break
+
+    return allocations
+
+
+
+def main():
+    # Definitions of professors, timeSlots, days, etc.
+    professors = [
+        Professor("Leonardo", "Pulido", 28, False),
+        Professor("Andrea", "Rojas", 27, True),
+        Professor("Monica", "Lewinski", 25, False),
+        Professor("Camila", "Perez", 27, False),
+        Professor("Carlos", "Santamaria", 28, False),
+        # ... other professors ...
+    ]
+    slot1 = TimeSlot("8:00", "8:45")
+    slot2 = TimeSlot("9:30", "10:15")
+    slot3 = TimeSlot("10:45", "11:30")
+    slot4 = TimeSlot("11:30", "12:30")
+    slot5 = TimeSlot("13:30", "14:15")
+    slot6 = TimeSlot("14:15", "15:15")
+    timeSlots = [slot1,slot2,slot3,slot4,slot5,slot6]
+    days = ["dia_uno", "dia_dos", "dia_tres", "dia_cuatro", "dia_cinco", "dia_seis"]
+
+    # Get allocations for all professors
+    all_allocations = get_all_allocations(professors, timeSlots, days)
+    print(all_allocations)
+
+    # Create the main GUI window with allocations
+    #root = tk.Tk()
+    #create_timetable(root, all_allocations)
+    #root.mainloop()
+
+
+    root = tk.Tk()
+
+    tk.Label(root, text="Test Label").grid(row=0, column=0, columnspan=len(days) + 1)
+
+    create_timetable(root, all_allocations)
+
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
+
+
