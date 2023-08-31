@@ -1,0 +1,40 @@
+class Professor:
+    def __init__(self, name, lastname, loadtime, director_curso=False):
+        """
+        Initialize the Professor object with the given attributes.
+        """
+        self.name = name
+        self.lastname = lastname
+        self.loadtime = loadtime
+        self.grades = []
+        self.director_curso = director_curso
+
+        if self.director_curso and loadtime >= 28:
+            raise ValueError("No se puede asignar a un profesor mas de 28 horas a la semana, cuando es director de curso.")
+        elif not self.director_curso and loadtime > 28:
+            raise ValueError(f"ningun profesor puede tener una carga horaria superior a 28 horas a la semana estas asignando :  {loadtime}")
+        else:
+            self.loadtime = loadtime
+
+    def add_grade(self, grade):
+        """
+        Add a grade to the professor's list of grades.
+        """
+        if grade not in self.grades:
+            self.grades.append(grade)
+
+    def remove_grade(self, grade):
+        """
+        Remove a grade from the professor's list of grades.
+        """
+        if grade in self.grades:
+            self.grades.remove(grade)
+
+
+'''
+name = input("Enter the professor's name: ")
+lastname = input("Enter the professor's last name: ")
+loadtime = float(input("Enter the professor's loadtime: "))
+diego= Professor(name,lastname,loadtime)
+'''
+
